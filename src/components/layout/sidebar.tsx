@@ -52,8 +52,9 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <div className="border-t border-slate-200 px-4 py-3">
+      <div className="border-t border-slate-200 px-4 py-3 space-y-1">
         <p className="text-xs text-slate-400">Mode demo lokal</p>
+        <p className="text-[10px] text-slate-300">Copyright © rvikyy_</p>
       </div>
     </aside>
   );
