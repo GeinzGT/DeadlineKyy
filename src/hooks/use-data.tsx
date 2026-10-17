@@ -60,27 +60,13 @@ interface DataContextValue {
 const DataContext = createContext<DataContextValue | null>(null);
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [schedules, setSchedules] = useState<ClassSchedule[]>([]);
-  const [taskTemplates, setTaskTemplates] = useState<TaskTemplate[]>([]);
-  const [taskOccurrences, setTaskOccurrences] = useState<TaskOccurrence[]>([]);
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [events, setEvents] = useState<SpecialEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadAll = useCallback(() => {
-    setCourses(storage.courses.getAll());
-    setSchedules(storage.schedules.getAll());
-    setTaskTemplates(storage.taskTemplates.getAll());
-    setTaskOccurrences(storage.taskOccurrences.getAll());
-    setNotes(storage.notes.getAll());
-    setEvents(storage.events.getAll());
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    loadAll();
-  }, [loadAll]);
+  const [courses, setCourses] = useState<Course[]>(() => storage.courses.getAll());
+  const [schedules, setSchedules] = useState<ClassSchedule[]>(() => storage.schedules.getAll());
+  const [taskTemplates, setTaskTemplates] = useState<TaskTemplate[]>(() => storage.taskTemplates.getAll());
+  const [taskOccurrences, setTaskOccurrences] = useState<TaskOccurrence[]>(() => storage.taskOccurrences.getAll());
+  const [notes, setNotes] = useState<Note[]>(() => storage.notes.getAll());
+  const [events, setEvents] = useState<SpecialEvent[]>(() => storage.events.getAll());
+  const [loading, setLoading] = useState(false);
 
   const addCourse = useCallback(
     (data: Omit<Course, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
@@ -271,7 +257,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
         addEvent,
         updateEvent,
         deleteEvent,
-        refresh: loadAll,
+        refresh: () => {
+          setCourses(storage.courses.getAll());
+          setSchedules(storage.schedules.getAll());
+          setTaskTemplates(storage.taskTemplates.getAll());
+          setTaskOccurrences(storage.taskOccurrences.getAll());
+          setNotes(storage.notes.getAll());
+          setEvents(storage.events.getAll());
+        },
       }}
     >
       {children}

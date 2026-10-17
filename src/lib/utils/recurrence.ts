@@ -52,7 +52,7 @@ export function generateWeeklyOccurrences(
   );
 
   const newOccurrences: TaskOccurrence[] = [];
-  let current = getNextDayOfWeek(startDate, targetDay, true);
+  const current = getNextDayOfWeek(startDate, targetDay, true);
 
   while (current <= endDate) {
     const dateStr = toDateString(current);

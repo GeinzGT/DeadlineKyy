@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Plus,
   Clock,
@@ -144,12 +144,10 @@ export function HomePage() {
     [schedules, currentDay]
   );
 
-  const [currentTimeStr, setCurrentTimeStr] = useState('00:00');
-
-  useEffect(() => {
+  const [currentTimeStr] = useState(() => {
     const now = new Date();
-    setCurrentTimeStr(`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`);
-  }, []);
+    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  });
 
   const nextClass = useMemo(
     () => todaySchedules.find((s) => s.startTime > currentTimeStr),
