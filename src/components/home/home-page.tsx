@@ -27,18 +27,22 @@ function ScheduleCard({ schedule }: { schedule: ClassSchedule }) {
     : schedule.roomCode || '-';
 
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-3">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100">
-        <BookOpen className="h-4 w-4 text-slate-600" />
+    <div className="group flex items-start gap-3.5 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition-all hover:shadow-md hover:border-indigo-200">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+        <BookOpen className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-slate-900 truncate">
+        <p className="text-sm font-semibold text-slate-900 truncate">
           {schedule.courseName || 'Mata Kuliah'}
         </p>
-        <p className="text-xs text-slate-500 mt-0.5">
-          {schedule.startTime} - {schedule.endTime}
-        </p>
-        <p className="text-xs text-slate-400 mt-0.5 truncate">{roomDisplay}</p>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+            <Clock className="h-3 w-3" />
+            {schedule.startTime} - {schedule.endTime}
+          </span>
+          <span className="text-xs text-slate-400">•</span>
+          <span className="text-xs text-slate-500 truncate">{roomDisplay}</span>
+        </div>
       </div>
     </div>
   );
@@ -53,23 +57,23 @@ function TaskCard({
 }) {
   const urgency = getTaskUrgency(task);
   const urgencyColors = {
-    overdue: 'border-red-200 bg-red-50',
-    due_today: 'border-amber-200 bg-amber-50',
-    due_soon: 'border-blue-100 bg-blue-50',
-    upcoming: 'border-slate-200 bg-white',
-    completed: 'border-slate-200 bg-slate-50',
+    overdue: 'border-red-200 bg-red-50/70 shadow-xs',
+    due_today: 'border-amber-200 bg-amber-50/70 shadow-xs',
+    due_soon: 'border-indigo-100 bg-indigo-50/30',
+    upcoming: 'border-slate-200/80 bg-white',
+    completed: 'border-slate-200/60 bg-slate-50/50 opacity-75',
   };
 
   return (
     <div
-      className={`flex items-start gap-3 rounded-lg border p-3 ${urgencyColors[urgency]}`}
+      className={`group flex items-start gap-3.5 rounded-2xl border p-4 transition-all hover:shadow-md ${urgencyColors[urgency]}`}
     >
       <button
         onClick={() => onComplete(task.id)}
-        className={`mt-0.5 h-5 w-5 shrink-0 rounded border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 ${
+        className={`mt-0.5 h-5 w-5 shrink-0 rounded-lg border-2 transition-all flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
           task.status === 'completed'
-            ? 'border-slate-400 bg-slate-400'
-            : 'border-slate-300 hover:border-slate-500'
+            ? 'border-indigo-600 bg-indigo-600 text-white scale-105'
+            : 'border-slate-300 hover:border-indigo-500 bg-white'
         }`}
         aria-label={
           task.status === 'completed' ? 'Tandai belum selesai' : 'Tandai selesai'
@@ -77,12 +81,12 @@ function TaskCard({
         type="button"
       >
         {task.status === 'completed' && (
-          <svg viewBox="0 0 12 12" className="h-full w-full text-white p-0.5">
+          <svg viewBox="0 0 12 12" className="h-3.5 w-3.5 text-white">
             <path
               d="M2 6l3 3 5-5"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -91,27 +95,32 @@ function TaskCard({
       </button>
       <div className="min-w-0 flex-1">
         <p
-          className={`text-sm font-medium truncate ${
+          className={`text-sm font-semibold truncate ${
             task.status === 'completed'
-              ? 'text-slate-400 line-through'
+              ? 'text-slate-400 line-through font-normal'
               : 'text-slate-900'
           }`}
         >
           {task.title}
         </p>
-        <div className="flex items-center gap-2 mt-0.5">
-          <p className="text-xs text-slate-500">
-            {task.dueDate} {task.dueTime}
-          </p>
+        <div className="flex items-center gap-2 mt-1 flex-wrap">
+          <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+            {task.dueDate} • {task.dueTime}
+          </span>
           {urgency === 'overdue' && (
-            <span className="inline-flex items-center gap-0.5 text-xs font-medium text-red-600">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 bg-red-100/80 px-2 py-0.5 rounded-md">
               <AlertTriangle className="h-3 w-3" />
               Terlambat
             </span>
           )}
+          {urgency === 'due_today' && (
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100/80 px-2 py-0.5 rounded-md">
+              Hari Ini!
+            </span>
+          )}
         </div>
         {task.courseName && (
-          <p className="text-xs text-slate-400 mt-0.5 truncate">{task.courseName}</p>
+          <p className="text-xs text-slate-400 mt-1 truncate">{task.courseName}</p>
         )}
       </div>
     </div>
